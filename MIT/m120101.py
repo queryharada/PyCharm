@@ -80,11 +80,9 @@ def chooseBest(pset, maxWeight, getVal, getWeight):
     for items in pset:
         itemsVal = 0.0
         itemsWeight = 0.0
-        print('#### SET #######')
         for item in items:
             itemsVal += getVal(item)
             itemsWeight += getWeight(item)
-            print(item)
         if itemsWeight <= maxWeight and itemsVal > bestVal:
             bestVal = itemsVal
             bestSet = items
