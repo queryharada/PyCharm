@@ -49,7 +49,7 @@ class Digraph(object):
         if node in self.nodes:
             raise ValueError('Duplicate node ')
         else:
-            self.nodes.append()
+            self.nodes.append(node)
             self.edges[node] = list()
 
     def addEdge(self, edge):
@@ -81,5 +81,53 @@ class Graph(Digraph):
         Digraph.addEdge(self, rev)
 
 
+def printPath(path):
+    result = ''
+    for i in range(len(path)):
+        result = result + str(path[i])
+        if i != len(path) - 1:
+            result = result + '->'
+    return result
+
+
+def DFS(garph, start, end, path, shortest, toPrint=False):
+    path = path + [start]
+    if toPrint:
+        print('Current DFS path:', printPath(path))
+    if start == end:
+        return path
+    for node in garph.chirdrenOf(start):
+        if node not in path:
+            if (shortest == None) or (len(path) < len(shortest)):
+                newPath = DFS(garph, node, end, path, shortest, toPrint)
+                if newPath != None:
+                    shortest = newPath
+    return shortest
+
+
+def shortestPath(garph, start, end, toPrint=False):
+    return DFS(garph, start, end, [], None, toPrint)
+
+
 if __name__ == "__main__":
-    pass
+    def testSP():
+        nodes = list()
+        for name in range(6):
+            nodes.append(Node(str(name)))
+        g = Digraph()
+        for n in nodes:
+            g.addNode(n)
+        g.addEdge(Edge(nodes[0], nodes[1]))
+        g.addEdge(Edge(nodes[1], nodes[2]))
+        g.addEdge(Edge(nodes[2], nodes[3]))
+        g.addEdge(Edge(nodes[3], nodes[4]))
+        g.addEdge(Edge(nodes[3], nodes[5]))
+        g.addEdge(Edge(nodes[0], nodes[2]))
+        g.addEdge(Edge(nodes[1], nodes[0]))
+        g.addEdge(Edge(nodes[3], nodes[1]))
+        g.addEdge(Edge(nodes[4], nodes[0]))
+        sp = shortestPath(g, nodes[0], nodes[5], toPrint=True)
+        print('Shortest path found by DFS:', printPath(sp))
+
+
+    testSP()
