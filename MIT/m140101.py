@@ -62,14 +62,32 @@ class UsualDrunk(Drunk):
         stepChoices = [(0, 1), (0, -1), (1, 0), (-1, 0)]
         return random.choice(stepChoices)
 
+
 def walk(f, d, numSteps):
     start = f.getLoc(d)
     for s in range(numSteps):
         f.moveDrunk(d)
     return start.distFrom(f.getLoc(d))
 
-def simWalks(nuumSteps, numTrails, dClass):
-    pass
+
+def simWalks(numSteps, numTrails, dClass):
+    Homer = dClass()
+    origin = Location(0, 0)
+    distances = list()
+    for t in range(numTrails):
+        f = Field()
+        f.addDrunk(Homer, origin)
+        distances.append(round(walk(f, Homer, numSteps), 1))
+    return distances
+
+
+def drunkTest(walkLengths, numTrails, dClass):
+    for numSteps in walkLengths:
+        distances = simWalks(numSteps, numTrails, dClass)
+        print(dClass.__name__, 'random walk of', numSteps, 'steps ')
+        print(' Mean =', round(sum(distances) / len(distances), 4))
+        print(' Max =', max(distances), 'Min =', min(distances))
+
 
 if __name__ == "__main__":
-    pass
+    drunkTest((0,1), 100, UsualDrunk)
