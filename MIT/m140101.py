@@ -89,5 +89,38 @@ def drunkTest(walkLengths, numTrails, dClass):
         print(' Max =', max(distances), 'Min =', min(distances))
 
 
+class ColdDrunk(Drunk):
+    def takeStep(self):
+        stepChoices = [(0.0, 1.0), (0.0, -2.0), (1.0, 0.0), (-1.0, 0.0)]
+        return random.choice(stepChoices)
+
+
+class EWDrunk(Drunk):
+    def takeStep(self):
+        stepChoices = [(1.0, 0.0), (-1.0, 0.0)]
+        return random.choice(stepChoices)
+
+
+def simAll(drunkKinds, walkLengths, numTrails):
+    for dClass in drunkKinds:
+        drunkTest(walkLengths, numTrails, dClass)
+
+
+class styleIterator(object):
+    def __init__(self, styles):
+        self.index = 0
+        self.styles = styles
+
+    def nextStyle(self):
+        result = self.styles[self.index]
+        if self.index == len(self.styles) - 1:
+            self.index = 0
+        else:
+            self.index += 1
+        return result
+
+
 if __name__ == "__main__":
     drunkTest((10, 100, 1000, 10000), 100, UsualDrunk)
+    drunkTest((0, 1), 100, UsualDrunk)
+    simAll((UsualDrunk, ColdDrunk, EWDrunk), (100, 1000), 10)
