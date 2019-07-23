@@ -90,4 +90,4 @@ def drunkTest(walkLengths, numTrails, dClass):
 
 
 if __name__ == "__main__":
-    drunkTest((0,1), 100, UsualDrunk)
+    drunkTest((10, 100, 1000, 10000), 100, UsualDrunk)
