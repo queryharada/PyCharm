@@ -109,6 +109,23 @@ def shortestPath(garph, start, end, toPrint=False):
     return DFS(garph, start, end, [], None, toPrint)
 
 
+def BFS(garph, start, end, toPrint=False):
+    initPath = [start]
+    pathQueue = [initPath]
+    while len(pathQueue) != 0:
+        tmpPath = pathQueue.pop(0)
+        if toPrint:
+            print('Current BFS Path:', printPath(tmpPath))
+        lastNode = tmpPath[-1]
+        if lastNode == end:
+            return tmpPath
+        for nextNode in garph.chirdrenOf(lastNode):
+            if nextNode not in tmpPath:
+                newPath = tmpPath + [nextNode]
+                pathQueue.append(newPath)
+    return None
+
+
 if __name__ == "__main__":
     def testSP():
         nodes = list()
@@ -128,6 +145,9 @@ if __name__ == "__main__":
         g.addEdge(Edge(nodes[4], nodes[0]))
         sp = shortestPath(g, nodes[0], nodes[5], toPrint=True)
         print('Shortest path found by DFS:', printPath(sp))
+
+        sp = BFS(g, nodes[0], nodes[5], toPrint=True)
+        print('Shortest path found by BFS:', printPath(sp))
 
 
     testSP()
