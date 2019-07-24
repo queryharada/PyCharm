@@ -44,6 +44,26 @@ class Field(object):
         return self.drunks[drunk]
 
 
+class oddField(Field):
+    def __init__(self, numHoles, xRange, yRange):
+        Field.__init__(self)
+        self.wormholes = dict()
+        for w in range(numHoles):
+            x = random.randint(-xRange, xRange)
+            y = random.randint(-yRange, yRange)
+            newX = random.randint(-xRange, xRange)
+            newY = random.randint(-yRange, yRange)
+            newLoc = Location(newX, newY)
+            self.wormholes[(x, y)] = newLoc
+
+    def moveDrunk(self, drunk):
+        Field.moveDrunk(self, drunk)
+        x = self.drunks[drunk].getX()
+        y = self.drunks[drunk].getY()
+        if (x, y) in self.wormholes:
+            self.drunks[drunk] = self.wormholes[(x, y)]
+
+
 import random
 
 
@@ -120,7 +140,100 @@ class styleIterator(object):
         return result
 
 
+import pylab
+
+
+def simDrunk(numTrails, dClass, walkLengths):
+    meanDistance = list()
+    for numSteps in walkLengths:
+        print('Starting simulation of', numSteps, 'steps')
+        trails = simWalks(numSteps, numTrails, dClass)
+        mean = sum(trails) / len(trails)
+        meanDistance.append(mean)
+    return meanDistance
+
+
+def simAll1(drunkKinds, walkLengths, numTrails):
+    styleChoice = styleIterator(('m-', 'r:', 'k-'))
+    for dClass in drunkKinds:
+        curStyle = styleChoice.nextStyle()
+        print('Starting simulation of', dClass.__name__)
+        means = simDrunk(numTrails, dClass, walkLengths)
+        pylab.plot(walkLengths, means, curStyle, label=dClass.__name__)
+        pylab.title('Mean Distance from Origin ('
+                    + str(numTrails) + ' trials)')
+        pylab.xlabel('Number of Step')
+        pylab.ylabel('Distance of Step')
+        pylab.legend(loc='best')
+        pylab.semilogx()
+        pylab.semilogy()
+    pylab.show()
+
+
+def getFinalLoc(numSteps, numTrails, dClass):
+    locs = list()
+    d = dClass()
+    for t in range(numTrails):
+        f = Field()
+        f.addDrunk(d, Location(0, 0))
+        for s in range(numSteps):
+            f.moveDrunk(d)
+        locs.append(f.getLoc(d))
+    return locs
+
+
+def plotLocs(drunkKinds, numSteps, numTrials):
+    styleChoice = styleIterator(('k+', 'r^', 'mo'))
+    for dClass in drunkKinds:
+        locs = getFinalLoc(numSteps, numTrials, dClass)
+        xVals, yVals = list(), list()
+        for loc in locs:
+            xVals.append(loc.getX())
+            yVals.append(loc.getY())
+        meanX = sum(xVals) / len(xVals)
+        meanY = sum(yVals) / len(yVals)
+        curStyle = styleChoice.nextStyle()
+        pylab.plot(xVals, yVals, curStyle,
+                   label=dClass.__name__ + ' mean loc, = <'
+                         + str(meanX) + ', ' + str(meanY) + '>')
+        pylab.title('Location at End of Walks ('
+                    + str(numSteps) + ' steps)')
+        pylab.xlabel('Steps East/West of Orign ')
+        pylab.ylabel('Steps North/South of Origin')
+        pylab.legend(loc='lower left')
+    pylab.show()
+
+
+def traceWalk(drunkKinds, numSteps):
+    styleChoice = styleIterator(('k+', 'r^', 'mo'))
+    # f = Field()
+    f = oddField(1000, 100, 200)
+    for dClass in drunkKinds:
+        d = dClass()
+        f.addDrunk(d, Location(0, 0))
+        locs = list()
+        for s in range(numSteps):
+            f.moveDrunk(d)
+            locs.append(f.getLoc(d))
+        xVals, yVals = list(), list()
+        for loc in locs:
+            xVals.append(loc.getX())
+            yVals.append(loc.getY())
+        curStyle = styleChoice.nextStyle()
+        pylab.plot(xVals, yVals, curStyle,
+                   label=dClass.__name__)
+        pylab.title('Sports Visited on Walk ('
+                    + str(numSteps) + ' steps)')
+        pylab.xlabel('Steps East/West of Orign ')
+        pylab.ylabel('Steps North/South of Origin')
+        pylab.legend(loc='best')
+    pylab.show()
+
+
 if __name__ == "__main__":
     drunkTest((10, 100, 1000, 10000), 100, UsualDrunk)
     drunkTest((0, 1), 100, UsualDrunk)
     simAll((UsualDrunk, ColdDrunk, EWDrunk), (100, 1000), 10)
+    simAll1((UsualDrunk, ColdDrunk, EWDrunk), (10, 100, 1000, 10000), 100)
+    plotLocs((UsualDrunk, ColdDrunk, EWDrunk), 100, 200)
+    traceWalk((UsualDrunk, ColdDrunk, EWDrunk), 500)
