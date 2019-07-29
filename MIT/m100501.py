@@ -1,5 +1,6 @@
 # -*- coding:utf-8 -*-
-from m100401 import *
+from m100401 import mergeSort
+
 
 
 def lastNameFirstName(name1, name2):
