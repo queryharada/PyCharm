@@ -58,6 +58,35 @@ def regressToMean(numFlips, numTrials):
     pylab.show()
 
 
+def flipPlot(minExp, maxExp):
+    ratios, diffs, xAxis = list(), list(), list()
+    for exp in range(minExp, maxExp + 1):
+        xAxis.append(2 ** exp)
+    for numFlips in xAxis:
+        numHeads = 0
+        for n in range(numFlips):
+            if random.choice(('H', 'T')) == 'H':
+                numHeads += 1
+        numTrails = numFlips - numHeads
+        try:
+            ratios.append(numHeads / numTrails)
+            diffs.append(abs(numHeads - numTrails))
+        except ZeroDivisionError:
+            continue
+    pylab.title('Difference Between Heads and Tails ')
+    pylab.xlabel('Number of Flips ')
+    pylab.ylabel('Abs(#Heads - #Tails ')
+    pylab.plot(xAxis, diffs, 'k')
+    pylab.figure()
+
+    pylab.title('Head/Tails Ratios ')
+    pylab.xlabel('Number of Flips ')
+    pylab.ylabel('#Heads/#Tails ')
+    pylab.plot(xAxis, ratios, 'k')
+
+    pylab.show()
+
+
 if __name__ == "__main__":
     # rollN(10)
     # print('Mean =', flipSim(2, 1))
@@ -68,4 +97,7 @@ if __name__ == "__main__":
     # print('Mean =', flipSim(100, 100000))
     # print('Mean =', flipSim(100, 100000))
 
-    regressToMean(15, 40)
+    # regressToMean(15, 40)
+
+    random.seed(0)
+    flipPlot(4, 20)
