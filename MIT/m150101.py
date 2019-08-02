@@ -87,6 +87,7 @@ def flipPlot(minExp, maxExp):
     pylab.show()
 
 
+
 if __name__ == "__main__":
     # rollN(10)
     # print('Mean =', flipSim(2, 1))
