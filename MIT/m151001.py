@@ -51,8 +51,9 @@ def labelPlot(numFlips, numTrials, mean, sd):
                 + str(numFlips) + ' flips each')
     pylab.xlabel('Fraction of Heads ')
     pylab.ylabel('Number of Trials ')
-    pylab.annotate('Mean = ' + str(round(mean, 4)) + '\nSD = ' + str(round(sd, 4)),
-                   size='x-large ', xycoords='axes fraction ', xy=(0.67, 0.5))
+    pylab.annotate('Mean = ' + str(round(mean, 4)) \
+                   + '\nSD = ' + str(round(sd, 4)), size='x-large ',
+                   xycoords='axes fraction ', xy=(0.67, 0.5))
 
 
 def makePlots(numFlips1, numFlips2, numTrials):
@@ -61,7 +62,6 @@ def makePlots(numFlips1, numFlips2, numTrials):
     xmin, xmax = pylab.xlim()
     labelPlot(numFlips1, numTrials, mean1, sd1)
     pylab.figure()
-
     val2, mean2, sd2 = flipSim(numFlips2, numTrials)
     pylab.hist(val1, bins=20)
     pylab.xlim(xmin, xmax)
