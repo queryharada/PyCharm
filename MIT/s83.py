@@ -1,4 +1,6 @@
 # -*- coding:utf-8 -*-
+
+
 class Car(object):
     def __init__(self, model=None):
         self.model = model
@@ -108,4 +110,5 @@ class Item(object):
 
 item = Item()
 item.name = "AAAA"
-item.price = 56
+item.price = 51
+item.price = 70
